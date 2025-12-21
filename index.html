@@ -1,50 +1,51 @@
-<!DOCTYPE html>
+htmlDownloadCopy code<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карго 665 | Профессиональный расчет логистики</title>
+    <title>Cargo 665 | Bilingual Logistics Calculator | 货运计算器</title>
     <style>
         :root {
             --primary: #1a1a1a;
             --accent: #f39c12; /* Фирменный оранжевый Cargo 665 */
             --accent-hover: #e67e22;
-            --bg-body: #f4f7f6;
+            --bg-body: #f1f2f6;
             --bg-card: #ffffff;
             --text-main: #2c3e50;
             --text-light: #7f8c8d;
             --border-color: #dcdde1;
             --success: #27ae60;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --radius: 12px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --radius: 16px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            line-height: 1.6;
+            line-height: 1.5;
+            padding-bottom: 50px;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
 
-        /* Header */
+        /* Header Styling */
         header {
             background: var(--primary);
             color: white;
-            padding: 20px 0;
+            padding: 25px 0;
             margin-bottom: 40px;
-            box-shadow: var(--shadow);
+            border-bottom: 4px solid var(--accent);
         }
 
         .header-flex {
@@ -54,32 +55,47 @@
         }
 
         .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
+            gap: 12px;
         }
 
         .logo span {
             color: var(--accent);
         }
 
-        .contact-info {
+        .lang-indicator {
             text-align: right;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
 
-        /* Main Layout */
+        /* Dual Language Text Helpers */
+        .cn {
+            display: block;
+            font-size: 0.85em;
+            font-weight: 400;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .cn-inline {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-left: 5px;
+        }
+
+        /* Main Grid */
         .app-grid {
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr 400px;
             gap: 30px;
-            margin-bottom: 50px;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             .app-grid {
                 grid-template-columns: 1fr;
             }
@@ -88,243 +104,200 @@
         .card {
             background: var(--bg-card);
             border-radius: var(--radius);
-            padding: 30px;
+            padding: 35px;
             box-shadow: var(--shadow);
         }
 
         h2 {
-            margin-bottom: 25px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            border-left: 5px solid var(--accent);
+            padding-left: 15px;
         }
 
-        h2::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 24px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-
-        /* Form Elements */
+        /* Form Controls */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.95rem;
         }
 
-        .input-wrapper {
+        .input-box {
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
         input, select {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            padding: 14px 18px;
+            border: 2px solid #edf2f7;
+            border-radius: 12px;
             font-size: 1rem;
-            transition: border-color 0.3s;
             outline: none;
+            transition: all 0.3s ease;
+            background: #f8fafc;
         }
 
         input:focus, select:focus {
             border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.1);
         }
 
-        .input-suffix {
+        .unit {
             position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            right: 18px;
+            font-weight: 600;
             color: var(--text-light);
-            font-size: 0.85rem;
             pointer-events: none;
         }
 
-        .grid-inputs {
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 8px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-
-        .checkbox-item:hover {
-            background: #fcfcfc;
-        }
-
-        .checkbox-item input {
-            width: auto;
+            gap: 20px;
         }
 
         /* Result Sidebar */
-        .result-card {
-            position: sticky;
-            top: 100px;
+        .result-panel {
             background: var(--primary);
             color: white;
+            position: sticky;
+            top: 30px;
             display: flex;
             flex-direction: column;
         }
 
-        .result-title {
-            color: var(--text-light);
-            text-transform: uppercase;
+        .total-label {
             font-size: 0.75rem;
-            letter-spacing: 1px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
             margin-bottom: 5px;
         }
 
-        .main-price {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 20px;
+        .total-amount {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 25px;
+            color: #fff;
         }
 
-        .price-details {
+        .breakdown {
             border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 20px;
-            flex-grow: 1;
+            padding-top: 25px;
         }
 
-        .detail-row {
+        .row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
         }
 
-        .detail-label {
-            color: #ccc;
+        .row .val {
+            font-weight: 700;
+            color: var(--accent);
         }
 
-        .detail-value {
-            font-weight: 600;
-        }
-
-        .warning-box {
-            background: rgba(243, 156, 18, 0.1);
-            border-left: 3px solid var(--accent);
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 0.8rem;
-            color: #efefef;
+        .row .lbl {
+            color: #bdc3c7;
         }
 
         .btn-print {
             background: var(--accent);
             color: var(--primary);
             border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 1rem;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.1rem;
             cursor: pointer;
-            width: 100%;
-            margin-top: 25px;
-            transition: background 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 20px;
+            transition: transform 0.2s, background 0.3s;
+            text-transform: uppercase;
         }
 
         .btn-print:hover {
             background: var(--accent-hover);
+            transform: translateY(-2px);
         }
 
-        /* Info Section */
-        .info-section {
-            margin-bottom: 60px;
+        /* Surcharge Badges */
+        .checkbox-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
         }
 
-        .info-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
-        .tab-btn {
-            padding: 10px 20px;
-            background: #ddd;
-            border: none;
-            border-radius: 20px;
+        .check-item {
+            border: 2px solid #edf2f7;
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            white-space: nowrap;
-            font-weight: 600;
-            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
         }
 
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
+        .check-item:hover {
+            border-color: var(--accent);
+        }
+
+        .check-item input {
+            width: auto;
+        }
+
+        /* Table Styling */
+        .table-section {
+            margin-top: 50px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
         }
 
         th {
-            background: #f8f9fa;
+            background: #f8fafc;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.85rem;
             color: var(--text-light);
-            font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .highlight-row {
-            background: rgba(243, 156, 18, 0.05);
-            font-weight: 600;
+        td {
+            padding: 15px;
+            border-top: 1px solid #f1f2f6;
         }
 
-        /* Print Template (Hidden by default) */
-        #print-template {
+        tr.active-row {
+            background: rgba(243, 156, 18, 0.1);
+            font-weight: 700;
+        }
+
+        /* Print Template */
+        #print-offer {
             display: none;
         }
 
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            #print-template, #print-template * {
-                visibility: visible;
-            }
-            #print-template {
+            body * { visibility: hidden; }
+            #print-offer, #print-offer * { visibility: visible; }
+            #print-offer {
                 display: block;
                 position: absolute;
                 left: 0;
@@ -337,33 +310,12 @@
             .no-print { display: none !important; }
         }
 
-        .print-header {
+        .print-head {
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px solid #333;
+            border-bottom: 3px solid var(--primary);
             padding-bottom: 20px;
             margin-bottom: 30px;
-        }
-
-        .offer-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .print-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-
-        .print-footer {
-            margin-top: 50px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-            font-size: 12px;
-            color: #666;
         }
     </style>
 </head>
@@ -372,10 +324,10 @@
 <header class="no-print">
     <div class="container">
         <div class="header-flex">
-            <div class="logo">🚀 КАРГО <span>665</span></div>
-            <div class="contact-info">
-                <div>Telegram: @cargo665</div>
-                <div>WhatsApp: +7 (916) 028-12-61</div>
+            <div class="logo">🚀 CARGO <span>665</span></div>
+            <div class="lang-indicator">
+                RU: Профессиональная логистика<br>
+                CN: 专业物流解决方案
             </div>
         </div>
     </div>
@@ -383,412 +335,274 @@
 
 <main class="container">
     <div class="app-grid no-print">
-        <!-- Input Section -->
+        <!-- Form Column -->
         <div class="card">
-            <h2>Расчет стоимости</h2>
-            
+            <h2>
+                Калькулятор стоимости
+                <span class="cn">费用计算器</span>
+            </h2>
+
             <div class="form-group">
-                <label>Категория товаров</label>
-                <select id="category" onchange="calculate()">
-                    <option value="household">Хозтовары (Авто-стандарт 30-35 дней)</option>
-                    <option value="clothing">Одежда (Авто-стандарт 30-35 дней)</option>
-                    <option value="shoes">Обувь (Авто-экспресс 10-15 дней)</option>
-                    <option value="furniture">Мебель / Люстры / Сумки (Москва-экспресс 8-12 дней)</option>
-                    <option value="taobao">Taobao (Москва 25-40 дней)</option>
+                <label>
+                    Категория товаров / 货物类别
+                </label>
+                <select id="category" onchange="calc()">
+                    <option value="house">Хозтовары / 日用品 (30-35 d)</option>
+                    <option value="cloth">Одежда / 服装 (30-35 d)</option>
+                    <option value="shoes">Обувь / 鞋类 (10-15 d)</option>
+                    <option value="express">Спецгруз / Мебель / 特殊货物 (8-12 d)</option>
+                    <option value="taobao">Taobao / 淘宝 (25-40 d)</option>
                 </select>
             </div>
 
-            <div class="grid-inputs">
+            <div class="grid-2">
                 <div class="form-group">
-                    <label>Общий вес</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="weight" value="10" min="10" step="0.1" oninput="calculate()">
-                        <span class="input-suffix">кг</span>
+                    <label>Вес / 重量</label>
+                    <div class="input-box">
+                        <input type="number" id="weight" value="10" min="10" step="0.1" oninput="calc()">
+                        <span class="unit">kg</span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Объем груза</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="volume" value="0.1" step="0.001" oninput="calculate()">
-                        <span class="input-suffix">м³</span>
+                    <label>Объем / 体积</label>
+                    <div class="input-box">
+                        <input type="number" id="volume" value="0.1" step="0.01" oninput="calc()">
+                        <span class="unit">m³</span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Дополнительные опции</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_special" onchange="calculate()"> Электроника/Текстиль (+$0.2/кг)
+                <label>Дополнительно / 额外费用</label>
+                <div class="checkbox-card">
+                    <label class="check-item">
+                        <input type="checkbox" id="spec_cargo" onchange="calc()">
+                        <span>Электроника/Текстиль <span class="cn">电子/纺织 (+$0.2)</span></span>
                     </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="is_replica" onchange="calculate()"> Реплики брендов (+$0.3/кг)
+                    <label class="check-item">
+                        <input type="checkbox" id="replica" onchange="calc()">
+                        <span>Реплики брендов <span class="cn">仿牌 (+$0.3)</span></span>
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Упаковка</label>
-                <select id="packaging" onchange="calculate()">
-                    <option value="0">Без доп. упаковки</option>
-                    <option value="4">Мешок + скотч ($4)</option>
-                    <option value="5">Уголки + Мешок + Скотч ($5)</option>
-                    <option value="8">Деревянная обрешетка ($8)</option>
-                    <option value="30">Деревянный поддон ($30/м³)</option>
+                <label>Упаковка / 包装类型</label>
+                <select id="pack" onchange="calc()">
+                    <option value="0">Стандарт / 标准</option>
+                    <option value="4">Мешок + Скотч / 袋子 + 胶带 ($4)</option>
+                    <option value="5">Уголки / 护角包裝 ($5)</option>
+                    <option value="8">Обрешетка / 木架 ($8)</option>
+                    <option value="30">Поддон / 托盘 ($30/m³)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Страховка (от стоимости товара)</label>
-                <div class="input-wrapper">
-                    <select id="insurance_pct" onchange="calculate()">
-                        <option value="0">Без страховки</option>
-                        <option value="0.01">1% (Базовая)</option>
+                <label>Страховка / 保险 (%)</label>
+                <div class="grid-2">
+                    <select id="ins_pct" onchange="calc()">
+                        <option value="0">Нет / 无</option>
                         <option value="0.02">2%</option>
                         <option value="0.03">3%</option>
                         <option value="0.05">5%</option>
-                        <option value="0.07">7% (Максимальная)</option>
                     </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Общая стоимость товаров (для страховки)</label>
-                <div class="input-wrapper">
-                    <input type="number" id="item_value" value="0" oninput="calculate()">
-                    <span class="input-suffix">$</span>
+                    <div class="input-box">
+                        <input type="number" id="val_goods" placeholder="Цена товара $" oninput="calc()">
+                        <span class="unit">$</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sticky Result Section -->
-        <div class="card result-card">
-            <div class="result-title">Ориентировочная стоимость</div>
-            <div class="main-price" id="total_display">$0.00</div>
-            
-            <div class="price-details">
-                <div class="detail-row">
-                    <span class="detail-label">Плотность:</span>
-                    <span class="detail-value" id="density_val">0 кг/м³</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Тариф:</span>
-                    <span class="detail-value" id="rate_val">$0.00 / кг</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Доставка:</span>
-                    <span class="detail-value" id="shipping_subtotal">$0.00</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Упаковка:</span>
-                    <span class="detail-value" id="packaging_val">$0.00</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Страховка:</span>
-                    <span class="detail-value" id="insurance_val">$0.00</span>
-                </div>
-                <div class="detail-row" style="margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <span class="detail-label">Разгрузка:</span>
-                    <span class="detail-value" id="handling_val">300 руб.</span>
-                </div>
-            </div>
+        <!-- Result Column -->
+        <div class="card result-panel">
+            <div class="total-label">Итого к оплате / 总费用</div>
+            <div class="total-amount" id="res_total">$0.00</div>
 
-            <div class="warning-box" id="min_weight_warning" style="display:none;">
-                ⚠️ Внимание: Минимальный вес для отправки — 10 кг.
+            <div class="breakdown">
+                <div class="row">
+                    <span class="lbl">Плотность / 密度</span>
+                    <span class="val" id="res_dens">0 kg/m³</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Тариф / 单价</span>
+                    <span class="val" id="res_rate">$0.00</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Доставка / 运费</span>
+                    <span class="val" id="res_ship">$0.00</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Упаковка / 包装</span>
+                    <span class="val" id="res_pack">$0.00</span>
+                </div>
+                <div class="row">
+                    <span class="lbl">Страховка / 保险</span>
+                    <span class="val" id="res_ins">$0.00</span>
+                </div>
             </div>
 
             <button class="btn-print" onclick="window.print()">
-                <span>🖨️ Сформировать предложение</span>
+                Печать КП / 打印报价单
             </button>
+            
+            <p style="font-size: 0.7rem; color: #7f8c8d; margin-top: 15px; text-align: center;">
+                *Минимальный вес 10кг. / 最低重量 10 公斤
+            </p>
         </div>
     </div>
 
-    <!-- Tables Info -->
-    <section class="info-section no-print">
-        <h2>Тарифные сетки</h2>
-        <div class="info-tabs">
-            <button class="tab-btn active" onclick="showTable('household')">Хозтовары</button>
-            <button class="tab-btn" onclick="showTable('clothing')">Одежда</button>
-            <button class="tab-btn" onclick="showTable('shoes')">Обувь</button>
-        </div>
-        <div class="card" style="padding: 0; overflow: hidden;">
-            <table id="data_table">
+    <!-- Tables -->
+    <div class="table-section no-print">
+        <h2 style="margin-top: 40px;">Тарифная сетка / 价格表</h2>
+        <div style="overflow-x: auto;">
+            <table id="tariff_table">
                 <thead>
                     <tr>
-                        <th>Плотность (кг/м³)</th>
-                        <th>Цена ($/кг)</th>
-                        <th>Примечание</th>
+                        <th>Плотность / 密度 (kg/m³)</th>
+                        <th>Цена / 价格 ($/kg)</th>
+                        <th>Примечание / 备注</th>
                     </tr>
                 </thead>
-                <tbody id="table_body">
-                    <!-- Dynamic -->
-                </tbody>
+                <tbody id="table_body"></tbody>
             </table>
         </div>
-    </section>
+    </div>
 </main>
 
-<!-- Hidden Print Template -->
-<div id="print-template">
-    <div class="print-header">
+<!-- PRINT TEMPLATE -->
+<div id="print-offer">
+    <div class="print-head">
         <div>
-            <div class="logo" style="color: black;">🚀 КАРГО <span style="color: #f39c12;">665</span></div>
-            <p>Профессиональные логистические решения</p>
+            <h1 style="font-size: 28px;">CARGO 665</h1>
+            <p>Commercial Offer / 商业报价单</p>
         </div>
         <div style="text-align: right;">
-            <p><strong>Дата:</strong> <span id="print_date"></span></p>
-            <p><strong>Менеджер:</strong> Расчет системы</p>
+            <p>Date: <span id="p_date"></span></p>
+            <p>Contacts: +7 (916) 028-12-61</p>
         </div>
     </div>
 
-    <div class="offer-title">Коммерческое предложение по доставке</div>
-    
-    <div class="print-grid">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;">
         <div>
-            <h3>Параметры груза</h3>
-            <p><strong>Категория:</strong> <span id="p_cat"></span></p>
-            <p><strong>Вес:</strong> <span id="p_weight"></span> кг</p>
-            <p><strong>Объем:</strong> <span id="p_vol"></span> м³</p>
-            <p><strong>Плотность:</strong> <span id="p_dens"></span> кг/м³</p>
+            <h3>Cargo Details / 货物详情</h3>
+            <hr style="margin: 10px 0;">
+            <p>Category / 类别: <b id="p_cat"></b></p>
+            <p>Weight / 重量: <b id="p_weight"></b> kg</p>
+            <p>Volume / 体积: <b id="p_vol"></b> m³</p>
+            <p>Density / 密度: <b id="p_dens"></b> kg/m³</p>
         </div>
         <div>
-            <h3>Расчет стоимости</h3>
-            <p><strong>Базовый тариф:</strong> <span id="p_rate"></span></p>
-            <p><strong>Стоимость логистики:</strong> <span id="p_ship"></span></p>
-            <p><strong>Упаковка:</strong> <span id="p_pack"></span></p>
-            <p><strong>Страховка:</strong> <span id="p_ins"></span></p>
-            <div style="margin-top: 15px; font-size: 20px;">
-                <strong>ИТОГО: <span id="p_total" style="color: #f39c12;"></span></strong>
-            </div>
+            <h3>Final Quote / 最终报价</h3>
+            <hr style="margin: 10px 0;">
+            <p>Shipping / 运费: <b id="p_ship"></b></p>
+            <p>Packaging / 包装: <b id="p_pack"></b></p>
+            <p>Insurance / 保险: <b id="p_ins"></b></p>
+            <h2 style="color: #f39c12; margin-top: 15px;">TOTAL: <span id="p_total"></span></h2>
         </div>
     </div>
 
-    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
-        <h4>Условия перевозки:</h4>
-        <ul style="margin-left: 20px; font-size: 14px;">
-            <li>Срок доставки: согласно выбранному тарифу.</li>
-            <li>В случае утери груза без страховки компенсация составляет $3-4/кг.</li>
-            <li>Страховой сбор обязателен для ценных грузов.</li>
-            <li>Стоимость разгрузки и передачи оплачивается отдельно при получении.</li>
-        </ul>
-    </div>
-
-    <div class="print-footer">
-        <div style="display: flex; justify-content: space-between;">
-            <div>
-                <strong>Контакты для связи:</strong><br>
-                Telegram: t.me/+79160281261<br>
-                WhatsApp: wa.me/+79160281261
-            </div>
-            <div style="text-align: right;">
-                ООО "Карго 665"<br>
-                Подпись: ____________________
-            </div>
-        </div>
+    <div style="margin-top: 50px; background: #f9f9f9; padding: 20px; font-size: 13px;">
+        <p><b>Terms / 条款:</b></p>
+        <p>1. Delivery time depends on selected category. / 运输时间取决于所选类别。</p>
+        <p>2. Insurance is recommended for valuable cargo. / 建议为贵重货物购买保险。</p>
+        <p>3. Compensation for loss without insurance: $3/kg. / 无保险丢货赔偿：3美元/公斤。</p>
     </div>
 </div>
 
 <script>
-    // Data structures from the PDF
     const DATA = {
-        household: [
-            { min: 1000, max: Infinity, price: 1.20 },
-            { min: 800, max: 1000, price: 1.30 },
-            { min: 600, max: 800, price: 1.40 },
-            { min: 500, max: 600, price: 1.50 },
-            { min: 400, max: 500, price: 1.60 },
-            { min: 350, max: 400, price: 1.70 },
-            { min: 300, max: 350, price: 1.80 },
-            { min: 250, max: 300, price: 1.90 },
-            { min: 200, max: 250, price: 2.00 },
-            { min: 190, max: 200, price: 2.10 },
-            { min: 180, max: 190, price: 2.20 },
-            { min: 170, max: 180, price: 2.30 },
-            { min: 160, max: 170, price: 2.40 },
-            { min: 150, max: 160, price: 2.50 },
-            { min: 140, max: 150, price: 2.60 },
-            { min: 130, max: 140, price: 2.70 },
-            { min: 120, max: 130, price: 2.80 },
-            { min: 110, max: 120, price: 2.90 },
-            { min: 100, max: 110, price: 3.00 },
-            { min: 0, max: 100, price: 300, isVolume: true }
+        house: [
+            {m:1000, x:9999, p:1.2}, {m:800, x:1000, p:1.3}, {m:600, x:800, p:1.4},
+            {m:500, x:600, p:1.5}, {m:400, x:500, p:1.6}, {m:350, x:400, p:1.7},
+            {m:300, x:350, p:1.8}, {m:250, x:300, p:1.9}, {m:200, x:250, p:2.0},
+            {m:100, x:200, p:2.5}, {m:0, x:100, p:300, v:true}
         ],
-        clothing: [
-            { min: 400, max: Infinity, price: 2.80 },
-            { min: 350, max: 400, price: 2.90 },
-            { min: 300, max: 350, price: 3.00 },
-            { min: 250, max: 300, price: 3.10 },
-            { min: 200, max: 250, price: 3.20 },
-            { min: 190, max: 200, price: 3.30 },
-            { min: 180, max: 190, price: 3.30 },
-            { min: 170, max: 180, price: 3.40 },
-            { min: 160, max: 170, price: 3.50 },
-            { min: 150, max: 160, price: 3.60 },
-            { min: 140, max: 150, price: 3.70 },
-            { min: 130, max: 140, price: 3.80 },
-            { min: 120, max: 130, price: 3.90 },
-            { min: 110, max: 120, price: 4.00 },
-            { min: 100, max: 110, price: 4.10 }
+        cloth: [
+            {m:400, x:9999, p:2.8}, {m:350, x:400, p:2.9}, {m:300, x:350, p:3.0},
+            {m:250, x:300, p:3.1}, {m:200, x:250, p:3.2}, {m:100, x:200, p:3.5}
         ],
         shoes: [
-            { min: 200, max: 250, price: 2.30 },
-            { min: 190, max: 200, price: 2.40 },
-            { min: 180, max: 190, price: 2.50 },
-            { min: 170, max: 180, price: 2.60 },
-            { min: 160, max: 170, price: 2.70 },
-            { min: 150, max: 160, price: 2.80 },
-            { min: 140, max: 150, price: 2.90 },
-            { min: 130, max: 140, price: 3.00 },
-            { min: 120, max: 130, price: 3.10 },
-            { min: 110, max: 120, price: 3.20 },
-            { min: 100, max: 110, price: 3.30 },
-            { min: 0, max: 100, price: 310, isVolume: true }
+            {m:200, x:250, p:2.3}, {m:150, x:200, p:2.7}, {m:100, x:150, p:3.2},
+            {m:0, x:100, p:310, v:true}
         ],
-        furniture: [
-            { min: 400, max: Infinity, price: 1.70 },
-            { min: 350, max: 400, price: 1.80 },
-            { min: 300, max: 350, price: 1.90 },
-            { min: 250, max: 300, price: 2.00 },
-            { min: 200, max: 250, price: 2.10 },
-            { min: 190, max: 200, price: 2.20 },
-            { min: 180, max: 190, price: 2.30 },
-            { min: 170, max: 180, price: 2.40 },
-            { min: 160, max: 170, price: 2.50 },
-            { min: 150, max: 160, price: 2.60 },
-            { min: 140, max: 150, price: 2.70 },
-            { min: 130, max: 140, price: 2.80 },
-            { min: 120, max: 130, price: 2.90 },
-            { min: 110, max: 120, price: 3.00 },
-            { min: 100, max: 110, price: 3.10 },
-            { min: 0, max: 100, price: 320, isVolume: true }
+        express: [
+            {m:400, x:9999, p:1.7}, {m:200, x:400, p:2.1}, {m:100, x:200, p:2.8},
+            {m:0, x:100, p:320, v:true}
         ],
         taobao: [
-            { min: 0, max: Infinity, price: 7.00 }
+            {m:0, x:9999, p:7.0}
         ]
     };
 
-    function calculate() {
+    function calc() {
         const cat = document.getElementById('category').value;
-        const weight = parseFloat(document.getElementById('weight').value) || 0;
-        const vol = parseFloat(document.getElementById('volume').value) || 0;
-        const isSpecial = document.getElementById('is_special').checked;
-        const isReplica = document.getElementById('is_replica').checked;
-        const packRate = parseFloat(document.getElementById('packaging').value);
-        const insPct = parseFloat(document.getElementById('insurance_pct').value);
-        const itemVal = parseFloat(document.getElementById('item_value').value) || 0;
+        const w = parseFloat(document.getElementById('weight').value) || 0;
+        const v = parseFloat(document.getElementById('volume').value) || 0;
+        const isSpec = document.getElementById('spec_cargo').checked;
+        const isRep = document.getElementById('replica').checked;
+        const packVal = parseFloat(document.getElementById('pack').value);
+        const insPct = parseFloat(document.getElementById('ins_pct').value);
+        const goodsVal = parseFloat(document.getElementById('val_goods').value) || 0;
 
-        // Weight validation
-        document.getElementById('min_weight_warning').style.display = weight < 10 ? 'block' : 'none';
+        if (w < 1) return;
 
-        if (vol <= 0 || weight <= 0) {
-            updateResults(0, 0, 0, 0, 0, 0);
-            return;
-        }
+        const density = v > 0 ? w / v : 0;
+        const tiers = DATA[cat];
+        let tier = tiers.find(t => density >= t.m && density < t.x) || tiers[tiers.length - 1];
 
-        const density = weight / vol;
-        const rates = DATA[cat];
-        let rateObj = rates.find(r => density >= r.min && density < r.max);
-        
-        // Fallback for edge cases
-        if (!rateObj) rateObj = rates[rates.length - 1];
+        let rate = tier.p;
+        if (isSpec) rate += 0.2;
+        if (isRep) rate += 0.3;
 
-        let basePrice = rateObj.price;
-        let shippingCost = 0;
+        const shipCost = tier.v ? (v * rate) : (w * rate);
+        const packCost = packVal === 30 ? (v * 30) : packVal;
+        const insCost = goodsVal * insPct;
+        const total = shipCost + packCost + insCost;
 
-        // Add surcharges
-        if (isSpecial) basePrice += 0.2;
-        if (isReplica) basePrice += 0.3;
+        // Update UI
+        document.getElementById('res_total').innerText = '$' + total.toFixed(2);
+        document.getElementById('res_dens').innerText = density.toFixed(1) + ' kg/m³';
+        document.getElementById('res_rate').innerText = '$' + rate.toFixed(2) + (tier.v ? '/m³' : '/kg');
+        document.getElementById('res_ship').innerText = '$' + shipCost.toFixed(2);
+        document.getElementById('res_pack').innerText = '$' + packCost.toFixed(2);
+        document.getElementById('res_ins').innerText = '$' + insCost.toFixed(2);
 
-        if (rateObj.isVolume) {
-            shippingCost = vol * basePrice;
-        } else {
-            shippingCost = weight * basePrice;
-        }
-
-        // Packaging
-        let packagingCost = 0;
-        if (packRate === 30) {
-            packagingCost = vol * 30;
-        } else {
-            packagingCost = packRate;
-        }
-
-        // Insurance
-        const insuranceCost = itemVal * insPct;
-
-        const total = shippingCost + packagingCost + insuranceCost;
-
-        updateResults(total, density, basePrice, shippingCost, packagingCost, insuranceCost, rateObj.isVolume);
-        updatePrintTemplate(cat, weight, vol, density, basePrice, shippingCost, packagingCost, insuranceCost, total, rateObj.isVolume);
+        renderTable(cat, density);
+        updatePrint(cat, w, v, density, shipCost, packCost, insCost, total);
     }
 
-    function updateResults(total, density, rate, ship, pack, ins, isVol) {
-        document.getElementById('total_display').innerText = '$' + total.toFixed(2);
-        document.getElementById('density_val').innerText = density.toFixed(1) + ' кг/м³';
-        document.getElementById('rate_val').innerText = '$' + rate.toFixed(2) + (isVol ? ' / м³' : ' / кг');
-        document.getElementById('shipping_subtotal').innerText = '$' + ship.toFixed(2);
-        document.getElementById('packaging_val').innerText = '$' + pack.toFixed(2);
-        document.getElementById('insurance_val').innerText = '$' + ins.toFixed(2);
-
-        // Highlight matching table row
-        showTable(document.getElementById('category').value, density);
-    }
-
-    function showTable(cat, densityToHighlight = null) {
-        // Handle tab buttons
-        const btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(b => {
-            b.classList.remove('active');
-            if(b.innerText.toLowerCase().includes(cat.substring(0,3))) b.classList.add('active');
-        });
-
-        const tbody = document.getElementById('table_body');
-        tbody.innerHTML = '';
-        
-        const rates = DATA[cat];
-        rates.forEach(r => {
+    function renderTable(cat, currentDens) {
+        const body = document.getElementById('table_body');
+        body.innerHTML = '';
+        DATA[cat].forEach(t => {
             const tr = document.createElement('tr');
-            if (densityToHighlight && densityToHighlight >= r.min && densityToHighlight < r.max) {
-                tr.className = 'highlight-row';
-            }
+            if (currentDens >= t.m && currentDens < t.x) tr.className = 'active-row';
             
-            const range = r.max === Infinity ? `Больше ${r.min}` : (r.min === 0 ? `Меньше ${r.max}` : `${r.min}-${r.max}`);
-            const price = r.isVolume ? `$${r.price}/м³` : `$${r.price.toFixed(2)}`;
-            
+            const range = t.x > 5000 ? `>${t.m}` : `${t.m}-${t.x}`;
             tr.innerHTML = `
                 <td>${range}</td>
-                <td>${price}</td>
-                <td>${r.isVolume ? 'Расчет по объему' : 'Стандарт'}</td>
+                <td>$${t.p}${t.v ? '/m³' : ''}</td>
+                <td>${t.v ? 'Объемный тариф / 体积价格' : 'По весу / 按重量'}</td>
             `;
-            tbody.appendChild(tr);
+            body.appendChild(tr);
         });
     }
 
-    function updatePrintTemplate(cat, weight, vol, density, rate, ship, pack, ins, total, isVol) {
-        const catMap = {
-            'household': 'Хозтовары',
-            'clothing': 'Одежда',
-            'shoes': 'Обувь',
-            'furniture': 'Мебель / Спецгруз',
-            'taobao': 'Taobao'
-        };
-        
-        document.getElementById('print_date').innerText = new Date().toLocaleDateString('ru-RU');
-        document.getElementById('p_cat').innerText = catMap[cat];
-        document.getElementById('p_weight').innerText = weight;
-        document.getElementById('p_vol').innerText = vol;
-        document.getElementById('p_dens').innerText = density.toFixed(1);
-        document.getElementById('p_rate').innerText = '$' + rate.toFixed(2) + (isVol ? ' / м³' : ' / кг');
+    function updatePrint(cat, w, v, d, ship, pack, ins, total) {
+        const names = {house:'Хозтовары / 日用品', cloth:'Одежда / 服装', shoes:'Обувь / 鞋类', express:'Спецгруз / 特殊', taobao:'Taobao'};
+        document.getElementById('p_date').innerText = new Date().toLocaleDateString();
+        document.getElementById('p_cat').innerText = names[cat];
+        document.getElementById('p_weight').innerText = w;
+        document.getElementById('p_vol').innerText = v;
+        document.getElementById('p_dens').innerText = d.toFixed(1);
         document.getElementById('p_ship').innerText = '$' + ship.toFixed(2);
         document.getElementById('p_pack').innerText = '$' + pack.toFixed(2);
         document.getElementById('p_ins').innerText = '$' + ins.toFixed(2);
         document.getElementById('p_total').innerText = '$' + total.toFixed(2);
     }
 
-    // Initial load
-    window.onload = () => {
-        calculate();
-    };
+    window.onload = calc;
 </script>
 
 </body>

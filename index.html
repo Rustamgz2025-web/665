@@ -351,12 +351,12 @@
             <div class="form-group">
                 <label>Категория товаров / 货物类别</label>
                 <select id="category" onchange="calc()">
-                    <option value="house">Хозтовары / 日用品 (30-35 d)</option>
                     <option value="cloth">Одежда / 服装 (30-35 d)</option>
-                    <option value="shoes">Обувь / 鞋类 (10-15 d)</option>
-                    <option value="express">Спецгруз / Авиа-экспресс / 特殊货物 (8-12 d)</option>
                     <option value="taobao">Taobao / 淘宝 (25-40 d)</option>
                 </select>
+                <p style="font-size: 0.85rem; color: #7f8c8d; margin-top: 8px;">
+                    * Если вас интересуют другие категории, пожалуйста, уточните стоимость у менеджера.
+                </p>
             </div>
 
             <div class="grid-2">
@@ -445,15 +445,6 @@
                             <li>6% - стоимость 76-90$/кг</li>
                             <li>7% - стоимость 91-105$/кг</li>
                             <li>>105$/кг - Индивидуально</li>
-                        </ul>
-                        <p><b>Страховой сбор (Авиа-экспресс):</b></p>
-                        <ul>
-                            <li>< 200$/кг - 1%</li>
-                            <li>200-400$/кг - 2%</li>
-                            <li>400-600$/кг - 3%</li>
-                            <li>600-800$/кг - 4%</li>
-                            <li>800-1000$/кг - 5%</li>
-                            <li>> 1000$/кг - 6%</li>
                         </ul>
                         <br>
                         <p><b>Без страховки:</b></p>
@@ -565,23 +556,28 @@
 
 <script>
     const DATA = {
-        house: [
-            {m:1000, x:9999, p:1.2}, {m:800, x:1000, p:1.3}, {m:600, x:800, p:1.4},
-            {m:500, x:600, p:1.5}, {m:400, x:500, p:1.6}, {m:350, x:400, p:1.7},
-            {m:300, x:350, p:1.8}, {m:250, x:300, p:1.9}, {m:200, x:250, p:2.0},
-            {m:100, x:200, p:2.5}, {m:0, x:100, p:300, v:true}
-        ],
         cloth: [
-            {m:400, x:9999, p:2.8}, {m:350, x:400, p:2.9}, {m:300, x:350, p:3.0},
-            {m:250, x:300, p:3.1}, {m:200, x:250, p:3.2}, {m:100, x:200, p:3.5}
-        ],
-        shoes: [
-            {m:200, x:250, p:2.3}, {m:150, x:200, p:2.7}, {m:100, x:150, p:3.2},
-            {m:0, x:100, p:310, v:true}
-        ],
-        express: [
-            {m:400, x:9999, p:1.7}, {m:200, x:400, p:2.1}, {m:100, x:200, p:2.8},
-            {m:0, x:100, p:320, v:true}
+            {m:300, x:9999, p:0.8},
+            {m:290, x:300, p:1.0},
+            {m:280, x:290, p:1.2},
+            {m:270, x:280, p:1.4},
+            {m:260, x:270, p:1.6},
+            {m:250, x:260, p:1.8},
+            {m:240, x:250, p:2.0},
+            {m:230, x:240, p:2.2},
+            {m:220, x:230, p:2.4},
+            {m:210, x:220, p:2.6},
+            {m:200, x:210, p:2.8},
+            {m:190, x:200, p:3.0},
+            {m:180, x:190, p:3.2},
+            {m:170, x:180, p:3.4},
+            {m:160, x:170, p:3.6},
+            {m:150, x:160, p:3.8},
+            {m:140, x:150, p:4.0},
+            {m:130, x:140, p:4.2},
+            {m:120, x:130, p:4.4},
+            {m:100, x:120, p:4.4},
+            {m:0, x:100, p:5.0} // Fallback for very low density
         ],
         taobao: [
             {m:0, x:9999, p:7.0}
@@ -602,16 +598,6 @@
         if (weight <= 0 || val <= 0) return 0;
         const valPerKg = val / weight;
 
-        // Special logic for Express
-        if (cat === 'express') {
-            if (valPerKg <= 200) return 0.01;
-            if (valPerKg <= 400) return 0.02;
-            if (valPerKg <= 600) return 0.03;
-            if (valPerKg <= 800) return 0.04;
-            if (valPerKg <= 1000) return 0.05;
-            return 0.06;
-        }
-
         // Standard Logic
         if (valPerKg <= 15) return 0.01;
         if (valPerKg <= 30) return 0.02;
@@ -621,7 +607,7 @@
         if (valPerKg <= 90) return 0.06;
         if (valPerKg <= 105) return 0.07;
         
-        return 0.07; // Default max for > 105 (Individual)
+        return 0.07; 
     }
 
     function calc() {
@@ -671,7 +657,7 @@
         // Update Insurance Display text
         const pctDisplay = (insPct * 100).toFixed(0) + '%';
         const valPerKg = w > 0 ? (goodsVal / w).toFixed(1) : 0;
-        const indLabel = (cat !== 'express' && valPerKg > 105) ? ' (Индив.)' : '';
+        const indLabel = (valPerKg > 105) ? ' (Индив.)' : '';
         document.getElementById('ins_percent_display').innerText = pctDisplay + indLabel;
 
         renderTable(cat, density);
@@ -696,9 +682,9 @@
     }
 
     function updatePrint(cat, w, v, d, ship, pack, ins, total, gVal, insRateTxt) {
-        const names = {house:'Хозтовары / 日用品', cloth:'Одежда / 服装', shoes:'Обувь / 鞋类', express:'Спецгруз / Авиа', taobao:'Taobao'};
+        const names = {cloth:'Одежда / 服装', taobao:'Taobao'};
         document.getElementById('p_date').innerText = new Date().toLocaleDateString();
-        document.getElementById('p_cat').innerText = names[cat];
+        document.getElementById('p_cat').innerText = names[cat] || cat;
         document.getElementById('p_weight').innerText = w;
         document.getElementById('p_vol').innerText = v;
         document.getElementById('p_dens').innerText = d.toFixed(1);
@@ -707,7 +693,6 @@
         document.getElementById('p_ins').innerText = '$' + ins.toFixed(2);
         document.getElementById('p_total').innerText = '$' + total.toFixed(2);
         
-        // New Print Fields
         document.getElementById('p_goods_val').innerText = gVal > 0 ? '$' + gVal : 'No Insurance';
         document.getElementById('p_ins_rate').innerText = ins > 0 ? insRateTxt : '0%';
     }

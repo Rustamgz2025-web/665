@@ -1,3 +1,16 @@
+Вот исправленный код.
+Что сделано:
+
+1. Страховка: Теперь это галочка (чекбокс) «Застраховать груз».
+2. Поле ввода: При активации галочки появляется поле для ввода «Общая стоимость товара ($)».
+3. Автоматический расчет: Процент страховки теперь рассчитывается автоматически по формуле: Стоимость / Вес = Цена за кг.
+
+Реализована вся логика (1% до 15/кг,2/кг и т.д.).
+Для категории «Спецгруз (Express)» применены особые тарифы (до 200$ - 1% и т.д.), как указано в задании.
+
+
+4. Информационный блок: Весь длинный текст с условиями, ответственностью и примерами добавлен в раскрывающийся список (спойлер) под полем страховки, чтобы не загромождать интерфейс, но быть доступным для прочтения.
+
 htmlDownloadCopy code<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,7 +20,7 @@ htmlDownloadCopy code<!DOCTYPE html>
     <style>
         :root {
             --primary: #1a1a1a;
-            --accent: #f39c12; /* Фирменный оранжевый Cargo 665 */
+            --accent: #f39c12;
             --accent-hover: #e67e22;
             --bg-body: #f1f2f6;
             --bg-card: #ffffff;
@@ -39,41 +52,40 @@ htmlDownloadCopy code<!DOCTYPE html>
             padding: 0 20px;
         }
 
-        /* Header Styling */
+        /* Header Banner Styling */
         header {
             background: var(--primary);
-            color: white;
-            padding: 25px 0;
+            width: 100%;
             margin-bottom: 40px;
             border-bottom: 4px solid var(--accent);
+            position: relative;
+            overflow: hidden;
         }
 
-        .header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 1px;
+        .banner-wrapper {
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            background: var(--primary);
         }
 
-        .logo span {
-            color: var(--accent);
+        .banner-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            object-position: center;
         }
 
-        .lang-indicator {
-            text-align: right;
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
+        @media (max-width: 1400px) { .banner-wrapper { max-height: 350px; } }
+        @media (max-width: 992px) { .banner-wrapper { max-height: 300px; } }
+        @media (max-width: 768px) { .banner-wrapper { max-height: 200px; } }
+        @media (max-width: 480px) { .banner-wrapper { max-height: 150px; } }
 
-        /* Dual Language Text Helpers */
+        /* Helpers */
         .cn {
             display: block;
             font-size: 0.85em;
@@ -82,24 +94,14 @@ htmlDownloadCopy code<!DOCTYPE html>
             margin-top: 2px;
         }
 
-        .cn-inline {
-            font-size: 0.9em;
-            opacity: 0.7;
-            margin-left: 5px;
-        }
-
-        /* Main Grid */
+        /* Layout */
         .app-grid {
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 30px;
         }
 
-        @media (max-width: 992px) {
-            .app-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 992px) { .app-grid { grid-template-columns: 1fr; } }
 
         .card {
             background: var(--bg-card);
@@ -115,10 +117,8 @@ htmlDownloadCopy code<!DOCTYPE html>
             padding-left: 15px;
         }
 
-        /* Form Controls */
-        .form-group {
-            margin-bottom: 25px;
-        }
+        /* Forms */
+        .form-group { margin-bottom: 25px; }
 
         label {
             display: block;
@@ -164,7 +164,7 @@ htmlDownloadCopy code<!DOCTYPE html>
             gap: 20px;
         }
 
-        /* Result Sidebar */
+        /* Result Panel */
         .result-panel {
             background: var(--primary);
             color: white;
@@ -229,7 +229,7 @@ htmlDownloadCopy code<!DOCTYPE html>
             transform: translateY(-2px);
         }
 
-        /* Surcharge Badges */
+        /* Checkboxes */
         .checkbox-card {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -248,19 +248,54 @@ htmlDownloadCopy code<!DOCTYPE html>
             transition: 0.2s;
         }
 
-        .check-item:hover {
-            border-color: var(--accent);
+        .check-item:hover { border-color: var(--accent); }
+        .check-item input { width: auto; }
+
+        /* Insurance Section Styles */
+        .ins-hidden { display: none; }
+        
+        .ins-info-box {
+            margin-top: 15px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.85rem;
+        }
+        
+        .ins-info-box summary {
+            background: #f8fafc;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            list-style: none; /* Hide default triangle */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ins-info-box summary::after {
+            content: "+";
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        
+        .ins-info-box[open] summary::after {
+            content: "-";
+        }
+        
+        .ins-content {
+            padding: 15px;
+            background: white;
+            color: var(--text-main);
+            line-height: 1.6;
         }
 
-        .check-item input {
-            width: auto;
-        }
+        .ins-content ul { padding-left: 20px; margin-bottom: 10px; }
+        .ins-content li { margin-bottom: 5px; }
+        .important-red { color: #e74c3c; font-weight: bold; }
 
-        /* Table Styling */
-        .table-section {
-            margin-top: 50px;
-        }
-
+        /* Tables */
+        .table-section { margin-top: 50px; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -269,7 +304,6 @@ htmlDownloadCopy code<!DOCTYPE html>
             overflow: hidden;
             box-shadow: var(--shadow);
         }
-
         th {
             background: #f8fafc;
             padding: 15px;
@@ -278,38 +312,29 @@ htmlDownloadCopy code<!DOCTYPE html>
             color: var(--text-light);
             text-transform: uppercase;
         }
-
         td {
             padding: 15px;
             border-top: 1px solid #f1f2f6;
         }
-
         tr.active-row {
             background: rgba(243, 156, 18, 0.1);
             font-weight: 700;
         }
 
-        /* Print Template */
-        #print-offer {
-            display: none;
-        }
-
+        /* Print */
+        #print-offer { display: none; }
         @media print {
             body * { visibility: hidden; }
             #print-offer, #print-offer * { visibility: visible; }
             #print-offer {
                 display: block;
                 position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white;
-                color: black;
-                padding: 40px;
+                left: 0; top: 0; width: 100%;
+                background: white; color: black; padding: 40px;
             }
             .no-print { display: none !important; }
+            .print-logo { height: 80px; margin-bottom: 10px; }
         }
-
         .print-head {
             display: flex;
             justify-content: space-between;
@@ -322,14 +347,8 @@ htmlDownloadCopy code<!DOCTYPE html>
 <body>
 
 <header class="no-print">
-    <div class="container">
-        <div class="header-flex">
-            <div class="logo">🚀 CARGO <span>665</span></div>
-            <div class="lang-indicator">
-                RU: Профессиональная логистика<br>
-                CN: 专业物流解决方案
-            </div>
-        </div>
+    <div class="banner-wrapper">
+        <img src="66501.jpg" alt="Cargo 665 Banner" class="banner-image">
     </div>
 </header>
 
@@ -343,14 +362,12 @@ htmlDownloadCopy code<!DOCTYPE html>
             </h2>
 
             <div class="form-group">
-                <label>
-                    Категория товаров / 货物类别
-                </label>
+                <label>Категория товаров / 货物类别</label>
                 <select id="category" onchange="calc()">
                     <option value="house">Хозтовары / 日用品 (30-35 d)</option>
                     <option value="cloth">Одежда / 服装 (30-35 d)</option>
                     <option value="shoes">Обувь / 鞋类 (10-15 d)</option>
-                    <option value="express">Спецгруз / Мебель / 特殊货物 (8-12 d)</option>
+                    <option value="express">Спецгруз / Авиа-экспресс / 特殊货物 (8-12 d)</option>
                     <option value="taobao">Taobao / 淘宝 (25-40 d)</option>
                 </select>
             </div>
@@ -387,30 +404,77 @@ htmlDownloadCopy code<!DOCTYPE html>
             </div>
 
             <div class="form-group">
-                <label>Упаковка / 包装类型</label>
+                <label>Упаковка / 包装类型 (Обязательно)</label>
                 <select id="pack" onchange="calc()">
-                    <option value="0">Стандарт / 标准</option>
-                    <option value="4">Мешок + Скотч / 袋子 + 胶带 ($4)</option>
+                    <option value="4" selected>Мешок + Скотч / 袋子 + 胶带 ($4)</option>
                     <option value="5">Уголки / 护角包裝 ($5)</option>
                     <option value="8">Обрешетка / 木架 ($8)</option>
                     <option value="30">Поддон / 托盘 ($30/m³)</option>
                 </select>
             </div>
 
+            <!-- New Insurance Section -->
             <div class="form-group">
-                <label>Страховка / 保险 (%)</label>
-                <div class="grid-2">
-                    <select id="ins_pct" onchange="calc()">
-                        <option value="0">Нет / 无</option>
-                        <option value="0.02">2%</option>
-                        <option value="0.03">3%</option>
-                        <option value="0.05">5%</option>
-                    </select>
+                <label>Страхование груза / 货物保险</label>
+                <div style="margin-bottom: 15px;">
+                    <label class="check-item" style="width: 100%;">
+                        <input type="checkbox" id="ins_check" onchange="toggleInsurance()">
+                        <span>Застраховать груз <span class="cn">购买保险</span></span>
+                    </label>
+                </div>
+
+                <div id="ins_input_block" class="ins-hidden">
+                    <label style="font-size: 0.9em; margin-bottom: 5px;">Общая стоимость товара ($) / 货物总值</label>
                     <div class="input-box">
-                        <input type="number" id="val_goods" placeholder="Цена товара $" oninput="calc()">
+                        <input type="number" id="val_goods" placeholder="Например: 700" oninput="calc()">
                         <span class="unit">$</span>
                     </div>
+                    <div style="margin-top: 5px; font-size: 0.85rem; color: var(--accent);">
+                        Расчетный тариф: <span id="ins_percent_display">0%</span>
+                    </div>
                 </div>
+
+                <!-- Accordion for Legal Text -->
+                <details class="ins-info-box">
+                    <summary>Условия страхования и ответственность</summary>
+                    <div class="ins-content">
+                        <p><b>СБОР СТРАХОВАНИЯ ТОВАРА: от 1-7% от общей суммы товара</b></p>
+                        <br>
+                        <p>1. Страхование является добровольным (рекомендуем для товаров >500$).</p>
+                        <p>2. Возмещение только за <b>потерянный/украденный/конфискованный</b> груз.</p>
+                        <p>3. Ответственность: доставка до г. Москва МКАД 19.</p>
+                        <br>
+                        <p class="important-red">ВАЖНО:</p>
+                        <p>Мы не несем ответственность за повреждение или утрату товарного вида в пути. (См. раздел упаковки).</p>
+                        <p>Обязательно сверяйте вес груза при получении!</p>
+                        <br>
+                        <p><b>Страховой сбор (Обычный):</b></p>
+                        <ul>
+                            <li>1% - стоимость до 15$/кг</li>
+                            <li>2% - стоимость 16-30$/кг</li>
+                            <li>3% - стоимость 31-45$/кг</li>
+                            <li>4% - стоимость 46-60$/кг</li>
+                            <li>5% - стоимость 61-75$/кг</li>
+                            <li>6% - стоимость 76-90$/кг</li>
+                            <li>7% - стоимость 91-105$/кг</li>
+                            <li>>105$/кг - Индивидуально</li>
+                        </ul>
+                        <p><b>Страховой сбор (Авиа-экспресс):</b></p>
+                        <ul>
+                            <li>< 200$/кг - 1%</li>
+                            <li>200-400$/кг - 2%</li>
+                            <li>400-600$/кг - 3%</li>
+                            <li>600-800$/кг - 4%</li>
+                            <li>800-1000$/кг - 5%</li>
+                            <li>> 1000$/кг - 6%</li>
+                        </ul>
+                        <br>
+                        <p><b>Без страховки:</b></p>
+                        <p>При утере груза компенсация: <b>3$ за кг</b>.</p>
+                        <br>
+                        <p style="font-size:0.8em; color:#7f8c8d;">Если вы не предупреждаете нас о наличии брендов/запрещенных товаров, страховка не выплачивается.</p>
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -474,7 +538,7 @@ htmlDownloadCopy code<!DOCTYPE html>
 <div id="print-offer">
     <div class="print-head">
         <div>
-            <h1 style="font-size: 28px;">CARGO 665</h1>
+            <img src="66501.jpg" alt="Logo" class="print-logo">
             <p>Commercial Offer / 商业报价单</p>
         </div>
         <div style="text-align: right;">
@@ -491,13 +555,14 @@ htmlDownloadCopy code<!DOCTYPE html>
             <p>Weight / 重量: <b id="p_weight"></b> kg</p>
             <p>Volume / 体积: <b id="p_vol"></b> m³</p>
             <p>Density / 密度: <b id="p_dens"></b> kg/m³</p>
+            <p>Cargo Value / 货值: <b id="p_goods_val"></b></p>
         </div>
         <div>
             <h3>Final Quote / 最终报价</h3>
             <hr style="margin: 10px 0;">
             <p>Shipping / 运费: <b id="p_ship"></b></p>
             <p>Packaging / 包装: <b id="p_pack"></b></p>
-            <p>Insurance / 保险: <b id="p_ins"></b></p>
+            <p>Insurance (<span id="p_ins_rate">0%</span>) / 保险: <b id="p_ins"></b></p>
             <h2 style="color: #f39c12; margin-top: 15px;">TOTAL: <span id="p_total"></span></h2>
         </div>
     </div>
@@ -505,8 +570,9 @@ htmlDownloadCopy code<!DOCTYPE html>
     <div style="margin-top: 50px; background: #f9f9f9; padding: 20px; font-size: 13px;">
         <p><b>Terms / 条款:</b></p>
         <p>1. Delivery time depends on selected category. / 运输时间取决于所选类别。</p>
-        <p>2. Insurance is recommended for valuable cargo. / 建议为贵重货物购买保险。</p>
-        <p>3. Compensation for loss without insurance: $3/kg. / 无保险丢货赔偿：3美元/公斤。</p>
+        <p>2. Insurance covers loss/theft only. / 保险仅承保丢失/被盗。</p>
+        <p>3. Compensation without insurance: $3/kg. / 无保险赔偿：3美元/公斤。</p>
+        <p>4. No compensation for hidden brands/prohibited items. / 瞒报品牌或违禁品无赔偿。</p>
     </div>
 </div>
 
@@ -535,6 +601,42 @@ htmlDownloadCopy code<!DOCTYPE html>
         ]
     };
 
+    function toggleInsurance() {
+        const isChecked = document.getElementById('ins_check').checked;
+        const block = document.getElementById('ins_input_block');
+        block.style.display = isChecked ? 'block' : 'none';
+        if (!isChecked) {
+            document.getElementById('val_goods').value = '';
+        }
+        calc();
+    }
+
+    function getInsuranceRate(cat, val, weight) {
+        if (weight <= 0 || val <= 0) return 0;
+        const valPerKg = val / weight;
+
+        // Special logic for Express
+        if (cat === 'express') {
+            if (valPerKg <= 200) return 0.01;
+            if (valPerKg <= 400) return 0.02;
+            if (valPerKg <= 600) return 0.03;
+            if (valPerKg <= 800) return 0.04;
+            if (valPerKg <= 1000) return 0.05;
+            return 0.06;
+        }
+
+        // Standard Logic
+        if (valPerKg <= 15) return 0.01;
+        if (valPerKg <= 30) return 0.02;
+        if (valPerKg <= 45) return 0.03;
+        if (valPerKg <= 60) return 0.04;
+        if (valPerKg <= 75) return 0.05;
+        if (valPerKg <= 90) return 0.06;
+        if (valPerKg <= 105) return 0.07;
+        
+        return 0.07; // Default max for > 105 (Individual)
+    }
+
     function calc() {
         const cat = document.getElementById('category').value;
         const w = parseFloat(document.getElementById('weight').value) || 0;
@@ -542,11 +644,14 @@ htmlDownloadCopy code<!DOCTYPE html>
         const isSpec = document.getElementById('spec_cargo').checked;
         const isRep = document.getElementById('replica').checked;
         const packVal = parseFloat(document.getElementById('pack').value);
-        const insPct = parseFloat(document.getElementById('ins_pct').value);
+        
+        // Insurance Calc
+        const isInsured = document.getElementById('ins_check').checked;
         const goodsVal = parseFloat(document.getElementById('val_goods').value) || 0;
-
+        
         if (w < 1) return;
 
+        // Shipping Rate
         const density = v > 0 ? w / v : 0;
         const tiers = DATA[cat];
         let tier = tiers.find(t => density >= t.m && density < t.x) || tiers[tiers.length - 1];
@@ -557,7 +662,15 @@ htmlDownloadCopy code<!DOCTYPE html>
 
         const shipCost = tier.v ? (v * rate) : (w * rate);
         const packCost = packVal === 30 ? (v * 30) : packVal;
-        const insCost = goodsVal * insPct;
+
+        // Insurance Cost
+        let insPct = 0;
+        let insCost = 0;
+        if (isInsured && goodsVal > 0) {
+            insPct = getInsuranceRate(cat, goodsVal, w);
+            insCost = goodsVal * insPct;
+        }
+
         const total = shipCost + packCost + insCost;
 
         // Update UI
@@ -567,9 +680,15 @@ htmlDownloadCopy code<!DOCTYPE html>
         document.getElementById('res_ship').innerText = '$' + shipCost.toFixed(2);
         document.getElementById('res_pack').innerText = '$' + packCost.toFixed(2);
         document.getElementById('res_ins').innerText = '$' + insCost.toFixed(2);
+        
+        // Update Insurance Display text
+        const pctDisplay = (insPct * 100).toFixed(0) + '%';
+        const valPerKg = w > 0 ? (goodsVal / w).toFixed(1) : 0;
+        const indLabel = (cat !== 'express' && valPerKg > 105) ? ' (Индив.)' : '';
+        document.getElementById('ins_percent_display').innerText = pctDisplay + indLabel;
 
         renderTable(cat, density);
-        updatePrint(cat, w, v, density, shipCost, packCost, insCost, total);
+        updatePrint(cat, w, v, density, shipCost, packCost, insCost, total, goodsVal, pctDisplay);
     }
 
     function renderTable(cat, currentDens) {
@@ -589,8 +708,8 @@ htmlDownloadCopy code<!DOCTYPE html>
         });
     }
 
-    function updatePrint(cat, w, v, d, ship, pack, ins, total) {
-        const names = {house:'Хозтовары / 日用品', cloth:'Одежда / 服装', shoes:'Обувь / 鞋类', express:'Спецгруз / 特殊', taobao:'Taobao'};
+    function updatePrint(cat, w, v, d, ship, pack, ins, total, gVal, insRateTxt) {
+        const names = {house:'Хозтовары / 日用品', cloth:'Одежда / 服装', shoes:'Обувь / 鞋类', express:'Спецгруз / Авиа', taobao:'Taobao'};
         document.getElementById('p_date').innerText = new Date().toLocaleDateString();
         document.getElementById('p_cat').innerText = names[cat];
         document.getElementById('p_weight').innerText = w;
@@ -600,6 +719,10 @@ htmlDownloadCopy code<!DOCTYPE html>
         document.getElementById('p_pack').innerText = '$' + pack.toFixed(2);
         document.getElementById('p_ins').innerText = '$' + ins.toFixed(2);
         document.getElementById('p_total').innerText = '$' + total.toFixed(2);
+        
+        // New Print Fields
+        document.getElementById('p_goods_val').innerText = gVal > 0 ? '$' + gVal : 'No Insurance';
+        document.getElementById('p_ins_rate').innerText = ins > 0 ? insRateTxt : '0%';
     }
 
     window.onload = calc;

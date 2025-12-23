@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+Я обновил код вашего калькулятора, добавив всю информацию из приложенной таблицы упаковки.
+Что изменилось:
+
+1. Добавлен новый тип упаковки: «Деревянный ящик» (Wooden Box) по цене $50/m³.
+2. Добавлены дополнительные опции (чекбоксы):
+
+Поролон (Foam) — $2
+Пупырчатая пленка (Bubble wrap) — $2
+Картонная коробка (Paper box) — $2
+
+
+3. Обновлены названия упаковок в выпадающем списке в точном соответствии с таблицей (Русский + Китайский).
+4. Логика расчета: для крупных деревянных конструкций (палет, ящик) расчет идет по объему ($/m³), для мелкой упаковки (мешок, уголки, обрешетка) оставлена фиксированная стоимость за место (как в базовой логике), но добавлены новые доп. услуги.
+
+Вот готовый код:
+htmlDownloadCopy code<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -269,9 +284,7 @@
             color: var(--text-main);
             line-height: 1.6;
         }
-
-        .ins-content ul { padding-left: 20px; margin-bottom: 10px; }
-        .ins-content li { margin-bottom: 5px; }
+        
         .important-red { color: #e74c3c; font-weight: bold; }
 
         .table-section { margin-top: 50px; }
@@ -300,6 +313,7 @@
             font-weight: 700;
         }
 
+        /* Print */
         #print-offer { display: none; }
         @media print {
             body * { visibility: hidden; }
@@ -332,6 +346,7 @@
 
 <main class="container">
     <div class="app-grid no-print">
+        <!-- Form Column -->
         <div class="card">
             <h2>
                 Калькулятор стоимости
@@ -344,8 +359,9 @@
                     <option value="cloth">Одежда / 服装 (30-35 d)</option>
                     <option value="taobao">Taobao / 淘宝 (25-40 d)</option>
                 </select>
-                <p style="font-size: 0.8rem; color: #7f8c8d; margin-top: 8px;">
-                    * По вопросам других категорий обращайтесь к менеджеру / 其他类别请咨询客服经理
+                <p style="font-size: 0.85rem; color: #e67e22; margin-top: 10px; font-weight: 600;">
+                    * По вопросам других категорий (хозтовары, обувь, спецгруз и др.) — пожалуйста, обращайтесь к менеджеру.
+                    <br><span class="cn">* 其他货物类别（日用品、鞋类、特殊货物等）请咨询客户经理。</span>
                 </p>
             </div>
 
@@ -371,7 +387,7 @@
                 <div class="checkbox-card">
                     <label class="check-item">
                         <input type="checkbox" id="spec_cargo" onchange="calc()">
-                        <span>Спецгруз <span class="cn">特殊货物 (+$0.2)</span></span>
+                        <span>Электроника/Текстиль <span class="cn">电子/纺织 (+$0.2)</span></span>
                     </label>
                     <label class="check-item">
                         <input type="checkbox" id="replica" onchange="calc()">
@@ -381,15 +397,35 @@
             </div>
 
             <div class="form-group">
-                <label>Упаковка / 包装类型 (Обязательно)</label>
+                <label>Базовая упаковка / 基本包装</label>
                 <select id="pack" onchange="calc()">
-                    <option value="4" selected>Мешок + Скотч / 袋子 + 胶带 ($4)</option>
-                    <option value="5">Уголки / 护角包裝 ($5)</option>
-                    <option value="8">Обрешетка / 木架 ($8)</option>
-                    <option value="30">Поддон / 托盘 ($30/m³)</option>
+                    <option value="4" selected>Скотч (Мешок) / 面单 (编织袋) ($4)</option>
+                    <option value="5">Бумажные уголки / 纸护角 ($5)</option>
+                    <option value="8">Деревянная обрешетка / 木架 ($8)</option>
+                    <option value="30">Деревянный палет / 木托盘 ($30/m³)</option>
+                    <option value="50">Деревянный ящик / 木箱 ($50/m³)</option>
                 </select>
             </div>
 
+            <div class="form-group">
+                <label>Доп. защита / 额外保护 (+$2)</label>
+                <div class="checkbox-card">
+                    <label class="check-item">
+                        <input type="checkbox" id="pack_foam" onchange="calc()">
+                        <span>Поролон <span class="cn">多规格 (海绵)</span></span>
+                    </label>
+                    <label class="check-item">
+                        <input type="checkbox" id="pack_bubble" onchange="calc()">
+                        <span>Пупырка <span class="cn">多规格 (气泡膜)</span></span>
+                    </label>
+                    <label class="check-item">
+                        <input type="checkbox" id="pack_box" onchange="calc()">
+                        <span>Коробка <span class="cn">多规格 (纸箱)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Insurance Section -->
             <div class="form-group">
                 <label>Страхование груза / 货物保险</label>
                 <div style="margin-bottom: 15px;">
@@ -411,34 +447,35 @@
                 </div>
 
                 <details class="ins-info-box">
-                    <summary>Условия страхования и ответственность / 保险条款与责任</summary>
+                    <summary>Условия страхования и ответственность / 保险条款</summary>
                     <div class="ins-content">
-                        <p><b>СБОР СТРАХОВАНИЯ ТОВАРА: от 1-7% / 货物保险费：1-7%</b></p>
+                        <p><b>СБОР СТРАХОВАНИЯ ТОВАРА: от 1-7% от общей суммы товара</b></p>
                         <br>
-                        <p>1. Страхование является добровольным. / 保险是自愿的。</p>
-                        <p>2. Возмещение только за <b>потерянный/украденный/конфискованный</b> груз. / 仅对<b>丢失、被盗、没收</b>的货物进行赔偿。</p>
-                        <p>3. Ответственность: до г. Москва МКАД 19. / 责任范围：运抵莫斯科 MKAD 19。</p>
+                        <p>1. Страхование является добровольным.</p>
+                        <p>2. Возмещение только за <b>потерянный/украденный/конфискованный</b> груз.</p>
+                        <p>3. Ответственность: доставка до г. Москва МКАД 19.</p>
                         <br>
-                        <p class="important-red">ВАЖНО / 重要提示:</p>
-                        <p>Мы не несем ответственность за повреждение или утрату товарного вида. / 我们对运输途中的破损或品相损失不承担责任。</p>
+                        <p class="important-red">ВАЖНО / 重要:</p>
+                        <p>Мы не несем ответственность за повреждение или утрату товарного вида в пути.</p>
                         <br>
-                        <p><b>Страховой сбор / 保险费率:</b></p>
+                        <p><b>Страховой сбор:</b></p>
                         <ul>
-                            <li>1% - до/至 15$/кг</li>
-                            <li>2% - 16-30$/кг</li>
-                            <li>3% - 31-45$/кг</li>
-                            <li>4% - 46-60$/кг</li>
-                            <li>5% - 61-75$/кг</li>
-                            <li>6% - 76-90$/кг</li>
-                            <li>7% - 91-105$/кг</li>
+                            <li>1% - стоимость до 15$/кг</li>
+                            <li>2% - стоимость 16-30$/кг</li>
+                            <li>3% - стоимость 31-45$/кг</li>
+                            <li>4% - стоимость 46-60$/кг</li>
+                            <li>5% - стоимость 61-75$/кг</li>
+                            <li>6% - стоимость 76-90$/кг</li>
+                            <li>7% - стоимость 91-105$/кг</li>
                         </ul>
                         <p><b>Без страховки / 无保险:</b></p>
-                        <p>Компенсация: <b>3$ за кг</b> / 赔偿标准：<b>3美元/公斤</b>。</p>
+                        <p>При утере груза компенсация: <b>3$ за кг</b>.</p>
                     </div>
                 </details>
             </div>
         </div>
 
+        <!-- Result Column -->
         <div class="card result-panel">
             <div class="total-label">Итого к оплате / 总费用</div>
             <div class="total-amount" id="res_total">$0.00</div>
@@ -469,9 +506,14 @@
             <button class="btn-print" onclick="window.print()">
                 Печать КП / 打印报价单
             </button>
+            
+            <p style="font-size: 0.7rem; color: #7f8c8d; margin-top: 15px; text-align: center;">
+                *Минимальный вес 10кг. / 最低重量 10 公斤
+            </p>
         </div>
     </div>
 
+    <!-- Tables -->
     <div class="table-section no-print">
         <h2 style="margin-top: 40px;">Тарифная сетка / 价格表</h2>
         <div style="overflow-x: auto;">
@@ -489,6 +531,7 @@
     </div>
 </main>
 
+<!-- PRINT TEMPLATE -->
 <div id="print-offer">
     <div class="print-head">
         <div>
@@ -509,13 +552,14 @@
             <p>Weight / 重量: <b id="p_weight"></b> kg</p>
             <p>Volume / 体积: <b id="p_vol"></b> m³</p>
             <p>Density / 密度: <b id="p_dens"></b> kg/m³</p>
+            <p>Cargo Value / 货值: <b id="p_goods_val"></b></p>
         </div>
         <div>
             <h3>Final Quote / 最终报价</h3>
             <hr style="margin: 10px 0;">
             <p>Shipping / 运费: <b id="p_ship"></b></p>
             <p>Packaging / 包装: <b id="p_pack"></b></p>
-            <p>Insurance / 保险: <b id="p_ins"></b></p>
+            <p>Insurance (<span id="p_ins_rate">0%</span>) / 保险: <b id="p_ins"></b></p>
             <h2 style="color: #f39c12; margin-top: 15px;">TOTAL: <span id="p_total"></span></h2>
         </div>
     </div>
@@ -524,7 +568,9 @@
 <script>
     const DATA = {
         cloth: [
-            {m:200, x:9999, p:3.40},
+            {m:300, x:9999, p:3.20},
+            {m:250, x:300, p:3.30},
+            {m:200, x:250, p:3.40},
             {m:190, x:200, p:3.50},
             {m:180, x:190, p:3.60},
             {m:170, x:180, p:3.70},
@@ -535,7 +581,7 @@
             {m:120, x:130, p:4.20},
             {m:110, x:120, p:4.30},
             {m:100, x:110, p:4.40},
-            {m:0, x:100, p:4.40}
+            {m:0, x:100, p:460, v:true}
         ],
         taobao: [
             {m:0, x:9999, p:7.0}
@@ -544,11 +590,13 @@
 
     function toggleInsurance() {
         const isChecked = document.getElementById('ins_check').checked;
-        document.getElementById('ins_input_block').style.display = isChecked ? 'block' : 'none';
+        const block = document.getElementById('ins_input_block');
+        block.style.display = isChecked ? 'block' : 'none';
+        if (!isChecked) document.getElementById('val_goods').value = '';
         calc();
     }
 
-    function getInsuranceRate(val, weight) {
+    function getInsuranceRate(cat, val, weight) {
         if (weight <= 0 || val <= 0) return 0;
         const valPerKg = val / weight;
         if (valPerKg <= 15) return 0.01;
@@ -557,6 +605,7 @@
         if (valPerKg <= 60) return 0.04;
         if (valPerKg <= 75) return 0.05;
         if (valPerKg <= 90) return 0.06;
+        if (valPerKg <= 105) return 0.07;
         return 0.07;
     }
 
@@ -566,10 +615,18 @@
         const v = parseFloat(document.getElementById('volume').value) || 0;
         const isSpec = document.getElementById('spec_cargo').checked;
         const isRep = document.getElementById('replica').checked;
+        
+        // Packaging inputs
         const packVal = parseFloat(document.getElementById('pack').value);
+        const hasFoam = document.getElementById('pack_foam').checked;
+        const hasBubble = document.getElementById('pack_bubble').checked;
+        const hasBox = document.getElementById('pack_box').checked;
+
         const isInsured = document.getElementById('ins_check').checked;
         const goodsVal = parseFloat(document.getElementById('val_goods').value) || 0;
         
+        if (w < 1) return;
+
         const density = v > 0 ? w / v : 0;
         const tiers = DATA[cat];
         let tier = tiers.find(t => density >= t.m && density < t.x) || tiers[tiers.length - 1];
@@ -578,13 +635,27 @@
         if (isSpec) rate += 0.2;
         if (isRep) rate += 0.3;
 
-        const shipCost = w * rate;
-        const packCost = packVal === 30 ? (v * 30) : packVal;
+        const shipCost = tier.v ? (v * rate) : (w * rate);
+        
+        // Packaging Calculation
+        let packCost = 0;
+        // If Pallet (30) or Wooden Box (50), calculate by Volume
+        if (packVal === 30 || packVal === 50) {
+            packCost = v * packVal;
+        } else {
+            // For bags/corners/frame, standard flat fee per "place" (unit)
+            packCost = packVal;
+        }
+
+        // Add extras ($2 each)
+        if (hasFoam) packCost += 2;
+        if (hasBubble) packCost += 2;
+        if (hasBox) packCost += 2;
 
         let insPct = 0;
         let insCost = 0;
         if (isInsured && goodsVal > 0) {
-            insPct = getInsuranceRate(goodsVal, w);
+            insPct = getInsuranceRate(cat, goodsVal, w);
             insCost = goodsVal * insPct;
         }
 
@@ -592,14 +663,16 @@
 
         document.getElementById('res_total').innerText = '$' + total.toFixed(2);
         document.getElementById('res_dens').innerText = density.toFixed(1) + ' kg/m³';
-        document.getElementById('res_rate').innerText = '$' + rate.toFixed(2) + '/kg';
+        document.getElementById('res_rate').innerText = '$' + rate.toFixed(2) + (tier.v ? '/m³' : '/kg');
         document.getElementById('res_ship').innerText = '$' + shipCost.toFixed(2);
         document.getElementById('res_pack').innerText = '$' + packCost.toFixed(2);
         document.getElementById('res_ins').innerText = '$' + insCost.toFixed(2);
-        document.getElementById('ins_percent_display').innerText = (insPct * 100).toFixed(0) + '%';
+        
+        const pctDisplay = (insPct * 100).toFixed(0) + '%';
+        document.getElementById('ins_percent_display').innerText = pctDisplay;
 
         renderTable(cat, density);
-        updatePrint(cat, w, v, density, shipCost, packCost, insCost, total);
+        updatePrint(cat, w, v, density, shipCost, packCost, insCost, total, goodsVal, pctDisplay);
     }
 
     function renderTable(cat, currentDens) {
@@ -609,12 +682,16 @@
             const tr = document.createElement('tr');
             if (currentDens >= t.m && currentDens < t.x) tr.className = 'active-row';
             const range = t.x > 5000 ? `>${t.m}` : `${t.m}-${t.x}`;
-            tr.innerHTML = `<td>${range}</td><td>$${t.p.toFixed(2)}</td><td>По весу / 按重量</td>`;
+            tr.innerHTML = `
+                <td>${range}</td>
+                <td>$${t.p}${t.v ? '/m³' : ''}</td>
+                <td>${t.v ? 'Объемный тариф / 体积价格' : 'По весу / 按重量'}</td>
+            `;
             body.appendChild(tr);
         });
     }
 
-    function updatePrint(cat, w, v, d, ship, pack, ins, total) {
+    function updatePrint(cat, w, v, d, ship, pack, ins, total, gVal, insRateTxt) {
         const names = {cloth:'Одежда / 服装', taobao:'Taobao'};
         document.getElementById('p_date').innerText = new Date().toLocaleDateString();
         document.getElementById('p_cat').innerText = names[cat];
@@ -625,6 +702,8 @@
         document.getElementById('p_pack').innerText = '$' + pack.toFixed(2);
         document.getElementById('p_ins').innerText = '$' + ins.toFixed(2);
         document.getElementById('p_total').innerText = '$' + total.toFixed(2);
+        document.getElementById('p_goods_val').innerText = gVal > 0 ? '$' + gVal : 'No Insurance';
+        document.getElementById('p_ins_rate').innerText = ins > 0 ? insRateTxt : '0%';
     }
 
     window.onload = calc;
